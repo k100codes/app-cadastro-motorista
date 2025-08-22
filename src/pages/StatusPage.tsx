@@ -47,16 +47,53 @@ const StatusPage: React.FC = () => {
     setSearched(true);
     
     try {
-      const response = await fetch(`/api/drivers/status/${cpf}`);
+      // Simular busca de status
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simular delay da API
       
-      if (response.ok) {
-        const data = await response.json();
-        setDriver(data);
-      } else if (response.status === 404) {
+      const cpfLimpo = cpf.replace(/\D/g, '');
+      
+      // Simular alguns CPFs de exemplo
+      const mockDriversStatus = [
+        {
+          _id: '1',
+          nomeCompleto: 'João Silva Santos',
+          cpf: '12345678900',
+          empresa: 'Empresa Demo',
+          telefone: '(11) 99999-9999',
+          email: 'joao.silva@email.com',
+          status: 'pendente' as const,
+          dataCadastro: new Date().toISOString()
+        },
+        {
+          _id: '2',
+          nomeCompleto: 'Maria Oliveira Costa',
+          cpf: '98765432100',
+          empresa: 'Transporte ABC Ltda',
+          telefone: '(11) 88888-8888',
+          email: 'maria.oliveira@email.com',
+          status: 'aprovado' as const,
+          dataCadastro: new Date(Date.now() - 86400000).toISOString()
+        },
+        {
+          _id: '3',
+          nomeCompleto: 'Carlos Pereira Lima',
+          cpf: '45678912300',
+          empresa: 'Logística XYZ S.A.',
+          telefone: '(11) 77777-7777',
+          email: 'carlos.pereira@email.com',
+          status: 'rejeitado' as const,
+          motivoReprovacao: 'Fotos não estão claras o suficiente',
+          dataCadastro: new Date(Date.now() - 172800000).toISOString()
+        }
+      ];
+      
+      const foundDriver = mockDriversStatus.find(d => d.cpf === cpfLimpo);
+      
+      if (foundDriver) {
+        setDriver(foundDriver);
+      } else {
         setDriver(null);
         toast.error('CPF não encontrado no sistema');
-      } else {
-        throw new Error('Erro na consulta');
       }
     } catch (error) {
       console.error('Erro ao consultar status:', error);

@@ -85,23 +85,70 @@ const AdminDashboardPage: React.FC = () => {
 
   const fetchDrivers = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/drivers', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      // Simular dados de motoristas para demonstração
+      const mockDrivers: Driver[] = [
+        {
+          _id: '1',
+          nomeCompleto: 'João Silva Santos',
+          cpf: '123.456.789-00',
+          empresa: adminData?.empresa || 'Empresa Demo',
+          telefone: '(11) 99999-9999',
+          email: 'joao.silva@email.com',
+          cnh: '12345678901',
+          fotos: {
+            frontal: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkZvdG8gRnJvbnRhbDwvdGV4dD48L3N2Zz4=',
+            perfilEsquerdo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBlcmZpbCBFc3E8L3RleHQ+PC9zdmc+',
+            perfilDireito: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBlcmZpbCBEaXI8L3RleHQ+PC9zdmc+'
+          },
+          status: 'pendente',
+          dataCadastro: new Date().toISOString()
         },
-      });
+        {
+          _id: '2',
+          nomeCompleto: 'Maria Oliveira Costa',
+          cpf: '987.654.321-00',
+          empresa: adminData?.empresa || 'Empresa Demo',
+          telefone: '(11) 88888-8888',
+          email: 'maria.oliveira@email.com',
+          cnh: '98765432109',
+          fotos: {
+            frontal: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkZvdG8gRnJvbnRhbDwvdGV4dD48L3N2Zz4=',
+            perfilEsquerdo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBlcmZpbCBFc3E8L3RleHQ+PC9zdmc+',
+            perfilDireito: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBlcmZpbCBEaXI8L3RleHQ+PC9zdmc+'
+          },
+          status: 'aprovado',
+          dataCadastro: new Date(Date.now() - 86400000).toISOString() // 1 dia atrás
+        },
+        {
+          _id: '3',
+          nomeCompleto: 'Carlos Pereira Lima',
+          cpf: '456.789.123-00',
+          empresa: adminData?.empresa || 'Empresa Demo',
+          telefone: '(11) 77777-7777',
+          email: 'carlos.pereira@email.com',
+          cnh: '45678912345',
+          fotos: {
+            frontal: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkZvdG8gRnJvbnRhbDwvdGV4dD48L3N2Zz4=',
+            perfilEsquerdo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBlcmZpbCBFc3E8L3RleHQ+PC9zdmc+',
+            perfilDireito: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBlcmZpbCBEaXI8L3RleHQ+PC9zdmc+'
+          },
+          status: 'rejeitado',
+          motivoReprovacao: 'Fotos não estão claras o suficiente',
+          dataCadastro: new Date(Date.now() - 172800000).toISOString() // 2 dias atrás
+        }
+      ];
 
-      if (response.ok) {
-        const data = await response.json();
-        setDrivers(data.drivers);
-        setStats(data.stats);
-      } else if (response.status === 401) {
-        toast.error('Sessão expirada. Faça login novamente.');
-        handleLogout();
-      } else {
-        toast.error('Erro ao carregar motoristas');
-      }
+      setDrivers(mockDrivers);
+      
+      // Calcular estatísticas
+      const mockStats = {
+        total: mockDrivers.length,
+        pendente: mockDrivers.filter(d => d.status === 'pendente').length,
+        aprovado: mockDrivers.filter(d => d.status === 'aprovado').length,
+        rejeitado: mockDrivers.filter(d => d.status === 'rejeitado').length
+      };
+      
+      setStats(mockStats);
     } catch (error) {
       console.error('Erro ao buscar motoristas:', error);
       toast.error('Erro de conexão');
@@ -112,17 +159,10 @@ const AdminDashboardPage: React.FC = () => {
 
   const fetchCadastroLink = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch('/api/admin/link', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setCadastroLink(data.link);
-      }
+      // Simular geração de link baseado no empresaId
+      const baseUrl = window.location.origin;
+      const link = `${baseUrl}/cadastro?empresaId=${adminData?.empresaId || 'demo123'}`;
+      setCadastroLink(link);
     } catch (error) {
       console.error('Erro ao buscar link:', error);
     }
@@ -147,26 +187,31 @@ const AdminDashboardPage: React.FC = () => {
 
   const handleStatusChange = async (driverId: string, newStatus: 'aprovado' | 'rejeitado', motivo?: string) => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`/api/admin/drivers/${driverId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          status: newStatus,
-          motivoReprovacao: motivo
-        }),
+      // Simular atualização de status
+      const updatedDrivers = drivers.map(driver => {
+        if (driver._id === driverId) {
+          return {
+            ...driver,
+            status: newStatus,
+            motivoReprovacao: newStatus === 'rejeitado' ? motivo : undefined
+          };
+        }
+        return driver;
       });
-
-      if (response.ok) {
-        toast.success(`Motorista ${newStatus} com sucesso!`);
-        fetchDrivers();
-        setSelectedDriver(null);
-      } else {
-        toast.error('Erro ao atualizar status');
-      }
+      
+      setDrivers(updatedDrivers);
+      
+      // Recalcular estatísticas
+      const newStats = {
+        total: updatedDrivers.length,
+        pendente: updatedDrivers.filter(d => d.status === 'pendente').length,
+        aprovado: updatedDrivers.filter(d => d.status === 'aprovado').length,
+        rejeitado: updatedDrivers.filter(d => d.status === 'rejeitado').length
+      };
+      setStats(newStats);
+      
+      toast.success(`Motorista ${newStatus} com sucesso!`);
+      setSelectedDriver(null);
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
       toast.error('Erro de conexão');

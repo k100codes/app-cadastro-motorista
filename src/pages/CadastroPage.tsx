@@ -183,40 +183,35 @@ const CadastroPage: React.FC = () => {
     
     setLoading(true);
     try {
-      const payload = {
-        ...formData,
-        fotos
-      };
+      // Simular envio de cadastro
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simular delay da API
       
-      const response = await fetch('/api/drivers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success('Cadastro enviado com sucesso! Aguarde a aprovação.');
-        
-        // Resetar formulário
-        setFormData({
-          nomeCompleto: '',
-          cpf: '',
-          empresa: `Empresa ${empresaId}`,
-          empresaId: empresaId || '',
-          telefone: '',
-          email: '',
-          senha: '',
-          confirmarSenha: '',
-          cnh: ''
-        });
-        setFotos({ frontal: '', perfilEsquerdo: '', perfilDireito: '' });
-      } else {
-        toast.error(data.message || 'Erro ao enviar cadastro');
+      // Simular validação de CPF/email únicos
+      const cpfLimpo = formData.cpf.replace(/\D/g, '');
+      if (cpfLimpo === '12345678900') {
+        toast.error('CPF já cadastrado');
+        return;
       }
+      if (formData.email === 'teste@teste.com') {
+        toast.error('Email já cadastrado');
+        return;
+      }
+      
+      toast.success('Cadastro enviado com sucesso! Aguarde a aprovação.');
+      
+      // Resetar formulário
+      setFormData({
+        nomeCompleto: '',
+        cpf: '',
+        empresa: `Empresa ${empresaId}`,
+        empresaId: empresaId || '',
+        telefone: '',
+        email: '',
+        senha: '',
+        confirmarSenha: '',
+        cnh: ''
+      });
+      setFotos({ frontal: '', perfilEsquerdo: '', perfilDireito: '' });
       
     } catch (error) {
       console.error('Erro no cadastro:', error);

@@ -30,29 +30,38 @@ const AdminLoginPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      // Simular validação de credenciais localmente
+      const validCredentials = [
+        { usuario: 'admin', senha: '123456', empresa: 'Empresa Demo', empresaId: 'demo123' },
+        { usuario: 'transporteabc', senha: 'abc123', empresa: 'Transporte ABC Ltda', empresaId: 'abc789' },
+        { usuario: 'logisticaxyz', senha: 'xyz456', empresa: 'Logística XYZ S.A.', empresaId: 'xyz456' }
+      ];
 
-      const data = await response.json();
+      const validUser = validCredentials.find(
+        cred => cred.usuario === formData.usuario && cred.senha === formData.senha
+      );
 
-      if (response.ok) {
-        // Salvar token no localStorage
-        localStorage.setItem('adminToken', data.token);
-        localStorage.setItem('adminData', JSON.stringify(data.admin));
+      if (validUser) {
+        // Simular token e dados do admin
+        const mockToken = 'mock-jwt-token-' + Date.now();
+        const adminData = {
+          usuario: validUser.usuario,
+          empresa: validUser.empresa,
+          empresaId: validUser.empresaId
+        };
         
-        toast.success(`Bem-vindo, ${data.admin.usuario}!`);
+        // Salvar no localStorage
+        localStorage.setItem('adminToken', mockToken);
+        localStorage.setItem('adminData', JSON.stringify(adminData));
+        
+        toast.success(`Bem-vindo, ${validUser.usuario}!`);
         navigate('/admin/dashboard');
       } else {
-        toast.error(data.message || 'Erro no login');
+        toast.error('Credenciais inválidas');
       }
     } catch (error) {
       console.error('Erro no login:', error);
-      toast.error('Erro de conexão. Verifique se o servidor está rodando.');
+      toast.error('Erro no login. Tente novamente.');
     } finally {
       setLoading(false);
     }
