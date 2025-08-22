@@ -5,10 +5,19 @@ require('dotenv').config();
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/trackia_drivers');
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri || mongoUri.includes('username:password')) {
+      console.error('❌ ERRO: MongoDB URI não configurada corretamente!');
+      console.error('📋 Configure sua string de conexão do MongoDB Atlas no arquivo .env');
+      console.error('💡 Exemplo: MONGODB_URI=mongodb+srv://usuario:senha@cluster0.mongodb.net/trackia_drivers');
+      process.exit(1);
+    }
+    
+    await mongoose.connect(mongoUri);
     console.log('MongoDB conectado com sucesso');
   } catch (error) {
-    console.error('Erro ao conectar com MongoDB:', error);
+    console.error('❌ Erro ao conectar com MongoDB:', error.message);
+    console.error('💡 Verifique se sua string de conexão do MongoDB Atlas está correta no arquivo .env');
     process.exit(1);
   }
 };
