@@ -86,7 +86,7 @@ const AdminDashboardPage: React.FC = () => {
   const fetchDrivers = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:5000/api/admin/drivers', {
+      const response = await fetch('/api/admin/drivers', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -113,7 +113,7 @@ const AdminDashboardPage: React.FC = () => {
   const fetchCadastroLink = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:5000/api/admin/link', {
+      const response = await fetch('/api/admin/link', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -148,7 +148,7 @@ const AdminDashboardPage: React.FC = () => {
   const handleStatusChange = async (driverId: string, newStatus: 'aprovado' | 'rejeitado', motivo?: string) => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:5000/api/admin/drivers/${driverId}`, {
+      const response = await fetch(`/api/admin/drivers/${driverId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

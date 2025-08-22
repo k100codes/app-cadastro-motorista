@@ -30,7 +30,7 @@ const AdminLoginPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/login', {
+      const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const AdminLoginPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro no login:', error);
-      toast.error('Erro de conexão. Tente novamente.');
+      toast.error('Erro de conexão. Verifique se o servidor está rodando.');
     } finally {
       setLoading(false);
     }

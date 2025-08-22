@@ -47,7 +47,7 @@ const StatusPage: React.FC = () => {
     setSearched(true);
     
     try {
-      const response = await fetch(`http://localhost:5000/api/drivers/status/${cpf}`);
+      const response = await fetch(`/api/drivers/status/${cpf}`);
       
       if (response.ok) {
         const data = await response.json();

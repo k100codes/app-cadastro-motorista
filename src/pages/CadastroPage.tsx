@@ -188,7 +188,7 @@ const CadastroPage: React.FC = () => {
         fotos
       };
       
-      const response = await fetch('http://localhost:5000/api/drivers', {
+      const response = await fetch('/api/drivers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
